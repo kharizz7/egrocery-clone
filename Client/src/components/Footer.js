@@ -1,13 +1,6 @@
-import React from 'react';
+import React from "react";
 import { Link } from "react-router-dom";
-
-const socialLinks = [
-  { id: 1, name: "Facebook", url: "https://www.facebook.com/", icon: "https://cdn-icons-png.flaticon.com/512/733/733547.png" },
-  { id: 2, name: "Twitter", url: "https://twitter.com/", icon: "https://cdn-icons-png.flaticon.com/512/733/733579.png" },
-  { id: 3, name: "Instagram", url: "https://www.instagram.com/", icon: "https://cdn-icons-png.flaticon.com/512/733/733558.png" },
-  { id: 4, name: "LinkedIn", url: "https://www.linkedin.com/", icon: "https://cdn-icons-png.flaticon.com/512/733/733561.png" },
-  { id: 5, name: "YouTube", url: "https://www.youtube.com/", icon: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png" },
-];
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -57,15 +50,21 @@ const Footer = () => {
       </div>
 
       {/* Social Links */}
-      <div className="mt-8 text-center">
-        <h2 className="text-lg font-semibold mb-4">Follow Us</h2>
-        <div className="flex justify-center space-x-4">
-          {socialLinks.map((link) => (
-            <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="transition-transform transform hover:scale-110">
-              <img src={link.icon} alt={link.name} className="w-8 h-8" />
-            </a>
-          ))}
-        </div>
+      <h2 className=" text-lg text-white font-semibold text-center mt-6">Follow us on</h2>
+      <div className="flex justify-center space-x-6 text-2xl mt-2">
+        
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:scale-110 transition-transform">
+          <FaFacebook />
+        </a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 hover:scale-110 transition-transform">
+          <FaTwitter />
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-700 hover:scale-110 transition-transform">
+          <FaInstagram />
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 hover:scale-110 transition-transform">
+          <FaLinkedin />
+        </a>
       </div>
     </footer>
   );

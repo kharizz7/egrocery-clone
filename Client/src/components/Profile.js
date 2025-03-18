@@ -1,37 +1,44 @@
-import React, { useEffect, useState } from "react";
+// components/Profile.js
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { clearUser } from "../redux/userSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [user, setUser] = useState({ username: "", email: "" });
 
+  // Access user data from Redux store
+  const user = useSelector((state) => state.user.user);
+
+  // Redirect to login if user is not found
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    const storedEmail = localStorage.getItem("email");
-
-    if (storedUsername && storedEmail) {
-      setUser({ username: storedUsername, email: storedEmail });
-    } else {
-      navigate("/account"); // Redirect to login if no user found
+    if (!user) {
+      navigate("/login");
     }
-  }, [navigate]);
+  }, [user, navigate]);
 
+  // Logout function to clear user data
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/account");
+    dispatch(clearUser());
+    navigate("/login");
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Profile</h1>
-        {user.username ? (
+        <h1 className="text-2xl text-center font-bold mb-4">Profile</h1>
+        {user ? (
           <>
-            <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <button 
-              onClick={handleLogout} 
-              className="mt-4 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+            <p>
+              <strong>Username:</strong> {user.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <button
+              onClick={handleLogout}
+              className="mt-4 bg-red-500 text-white p-2 px-4 rounded-lg hover:bg-red-600"
             >
               Logout
             </button>

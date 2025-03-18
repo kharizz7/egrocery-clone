@@ -1,10 +1,24 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Logo from "../assets/egrocery-logo.png";
 import Account from "../assets/account.png";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Access user data from Redux
+  const user = useSelector((state) => state.user.user);
+
+  // Handle navigation based on login status
+  const handleAccountClick = () => {
+    if (user) {
+      navigate("/profile"); // Redirect to profile if logged in
+    } else {
+      navigate("/account"); // Redirect to account if not logged in
+    }
+  };
 
   return (
     <nav className="text-white shadow-md">
@@ -23,9 +37,9 @@ const Navbar = () => {
           <img className="h-10 w-10 ml-2" src={Logo} alt="Logo" />
         </Link>
 
-        {/* Search Bar (Only in Desktop View) */}
-        <div className=" md:flex hidden flex-1 justify-center">
-          <div className="flex items-center border border-green-700 bg-white ">
+        {/* Search Bar (Desktop) */}
+        <div className="md:flex hidden w-[600px] justify-center">
+          <div className="flex items-center border border-green-700 bg-white w-full">
             <input
               type="text"
               placeholder="Search for products..."
@@ -35,41 +49,57 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Login */}
+        {/* Account Icon - Navigate Based on Login */}
         <div className="flex items-center space-x-4 ml-6">
-          <Link to="/account">
-            <img src={Account} className="w-7 h-7" alt="Login" />
-          </Link>
-        </div>
-        
-      </div>
-      {/* search bar for mobile view */}
-      <div className="lg:hidden md:flex flex-1  justify-center">
-          <div className=" flex items-center border border-green-700 bg-white ">
-            <input
-              type="text"
-              placeholder="Search for products..."
-              className="w-full p-2 text-black focus:outline-none"
-            />
-            <button className="bg-green-900 p-2 text-white">Go</button>
-          </div>
+          <img
+            src={Account}
+            className="w-7 h-7 cursor-pointer"
+            alt="Account"
+            onClick={handleAccountClick}
+          />
         </div>
 
-      {/* Navigation Links (Mobile & Desktop) */}
+      </div>
+
+      {/* Search Bar (Mobile) */}
+      <div className="md:hidden flex-1 justify-center">
+        <div className="flex items-center border border-green-700 bg-white">
+          <input
+            type="text"
+            placeholder="Search for products..."
+            className="w-full p-2 text-black focus:outline-none"
+          />
+          <button className="bg-green-900 p-2 text-white">Go</button>
+        </div>
+      </div>
+
+      {/* Navigation Links */}
       <div
         className={`bg-gray-700 p-2 transition-all duration-300 ease-in-out ${
           menuOpen ? "block" : "hidden md:flex"
         }`}
       >
         <ul className="flex flex-col md:flex-row md:space-x-6">
-          <li><Link to="/babycare" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Babycare</Link></li>
-          <li><Link to="/bakery" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Bakery</Link></li>
-          <li><Link to="/beauty" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Beauty</Link></li>
-          <li><Link to="/beverages" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Beverages</Link></li>
-          <li><Link to="/household" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Household</Link></li>
-          <li><Link to="/foodgrains" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Foodgrains</Link></li>
-          <li><Link to="/snacks" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Snacks</Link></li>
-          <li><Link to="/gourments" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Gourments</Link></li>
+          {[
+            "babycare",
+            "bakery",
+            "beauty",
+            "beverages",
+            "household",
+            "foodgrains",
+            "snacks",
+            "gourmets",
+          ].map((item) => (
+            <li key={item}>
+              <Link
+                to={`/${item}`}
+                className="hover:text-gray-200"
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>

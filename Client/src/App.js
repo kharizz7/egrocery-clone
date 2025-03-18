@@ -33,7 +33,7 @@ function App() {
           <Route path="/beauty" element={<Beauty />} />
           <Route path="/snacks" element={<Snacks />} />
           <Route path="/beverages" element={<Beverages />} />
-          <Route path="/gourmet" element={<Gourmet />} />
+          <Route path="/gourmets" element={<Gourmet />} />
           <Route path="/household" element={<Household />} />
        
       </Routes>
