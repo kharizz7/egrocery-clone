@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Logo from "../assets/egrocery-logo.png";
-import Account from "../assets/account.png";
+import Logo from "../../assets/egrocery-logo.png";
+import Account from "../../assets/account.png";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -81,14 +81,11 @@ const Navbar = () => {
       >
         <ul className="flex flex-col md:flex-row md:space-x-6">
           {[
-            "babycare",
-            "bakery",
-            "beauty",
-            "beverages",
-            "household",
-            "foodgrains",
-            "snacks",
-            "gourmets",
+            "grocery",
+            "misscilenaous",
+            "personalcare",
+            "haircare",
+            "housecare"
           ].map((item) => (
             <li key={item}>
               <Link

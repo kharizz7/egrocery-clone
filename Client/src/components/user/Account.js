@@ -1,58 +1,60 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/userSlice";
-
+import { setUser } from "../../redux/userSlice";
 
 const Account = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");  
-  const [confirmPassword, setConfirmPassword] = useState(""); 
-  const [isSignUp, setIsSignUp] = useState(false); 
-  const [successMessage, setSuccessMessage] = useState(""); 
-  const [errorMessage, setErrorMessage] = useState(""); // New state for error messages
-  const navigate = useNavigate(); 
+  const [username, setUsername] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Password confirmation validation
     if (isSignUp && password !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
       return;
     }
 
-    const url = isSignUp 
-      ? "http://localhost:3000/api/signup" 
-      : "http://localhost:3000/api/signin";
-  
-    const requestData = isSignUp 
-      ? { email, password, username, confirmPassword }  
-      : { email, password }; 
+    const url = isSignUp
+      ? "http://localhost:3000/api/register"
+      : "http://localhost:3000/api/login";
+
+    const requestData = isSignUp
+      ? { email, password, username }
+      : { email, password };
 
     try {
-      const response = await axios.post(url, requestData);
+      const { data } = await axios.post(url, requestData);
 
       setSuccessMessage(isSignUp ? "User created successfully!" : "Sign-in successful!");
-      setErrorMessage(""); // Clear errors if success
+      setErrorMessage("");
 
-     
-if (response.data.token) {
-  dispatch(setUser({
-    user: {
-      username: response.data.username,
-      email: response.data.email,
-    },
-    token: response.data.token,
-  }));
-}
+      // Safely get token and user info
+      const token = data.token;
+      const userInfo = {
+        username: data.username || data.user?.username,
+        email: data.email || data.user?.email,
+      };
 
-      setTimeout(() => navigate("/profile"), 1500);
+      if (token && userInfo.email) {
+        dispatch(setUser({ user: userInfo, token }));
+        console.log("✅ User stored in Redux:", userInfo, token);
+      } else {
+        console.warn("⚠️ Missing token or user info in response");
+      }
 
+      setTimeout(() => navigate("/"), 1500);
     } catch (error) {
+      console.error("Login/Register Error:", error);
       setErrorMessage(error.response?.data?.message || "An error occurred. Please try again.");
     }
   };
@@ -62,14 +64,12 @@ if (response.data.token) {
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold text-center mb-6">{isSignUp ? "Sign Up" : "Sign In"}</h1>
 
-        {/* Display Success Message */}
         {successMessage && (
           <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
             {successMessage}
           </div>
         )}
 
-        {/* Display Error Message */}
         {errorMessage && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
             {errorMessage}
@@ -85,11 +85,12 @@ if (response.data.token) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
           )}
+
           <div>
             <label className="block text-sm font-medium text-gray-600">Email</label>
             <input
@@ -97,10 +98,11 @@ if (response.data.token) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-600">Password</label>
             <input
@@ -108,10 +110,11 @@ if (response.data.token) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
+
           {isSignUp && (
             <div>
               <label className="block text-sm font-medium text-gray-600">Confirm Password</label>
@@ -120,24 +123,24 @@ if (response.data.token) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
           )}
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-200"
+            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition"
           >
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
 
-        {/* Show 'Proceed to Home' button after success */}
         {successMessage && (
           <button
-            onClick={() => navigate("/")}
-            className="mt-4 w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-200"
+            onClick={() => navigate("/egrocery")}
+            className="mt-4 w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition"
           >
             Proceed to Home
           </button>
@@ -150,7 +153,7 @@ if (response.data.token) {
               onClick={() => {
                 setIsSignUp(!isSignUp);
                 setSuccessMessage("");
-                setErrorMessage(""); // Clear messages on toggle
+                setErrorMessage("");
               }}
               className="text-blue-500 hover:text-blue-700 font-medium"
             >

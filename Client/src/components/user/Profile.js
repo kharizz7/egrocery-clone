@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearUser } from "../redux/userSlice";
+import { logout } from "../../redux/userSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const Profile = () => {
 
   // Logout function to clear user data
   const handleLogout = () => {
-    dispatch(clearUser());
+    dispatch(logout());
     navigate("/login");
   };
 
