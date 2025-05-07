@@ -1,43 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Logo from "../../assets/egrocery-logo.png";
 import Account from "../../assets/account.png";
+import Location from "../../assets/location.png";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Access user data from Redux
   const user = useSelector((state) => state.user.user);
+  const selectedAddress = useSelector((state) => state.user.selectedAddress);
 
-  // Handle navigation based on login status
-  const handleAccountClick = () => {
-    if (user) {
-      navigate("/profile"); // Redirect to profile if logged in
+
+  // Optional: useEffect to log when selectedAddress changes
+  useEffect(() => {
+    if (selectedAddress) {
+      console.log("Selected Address from Redux:", selectedAddress);
     } else {
-      navigate("/account"); // Redirect to account if not logged in
+      console.log("No address selected");
     }
+  }, [selectedAddress]);
+
+  const handleAccountClick = () => {
+    navigate(user ? "/profile" : "/account");
+  };
+
+  const handleLocation = () => {
+    navigate("/addAddress");
   };
 
   return (
     <nav className="text-white shadow-md">
       <div className="container p-4 bg-gray-200 flex items-center justify-between">
-        
-        {/* Mobile Menu Button */}
-        <button 
+        <button
           className="md:hidden text-black focus:outline-none mr-1 flex items-center"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           &#9776;
         </button>
 
-        {/* Logo */}
         <Link to="/" className="flex-shrink-0">
           <img className="h-10 w-10 ml-2" src={Logo} alt="Logo" />
         </Link>
 
-        {/* Search Bar (Desktop) */}
+        <div
+          className="flex items-center space-x-2 ml-6 cursor-pointer"
+          onClick={handleLocation}
+        >
+          <img src={Location} className="w-7 h-7" alt="Location" />
+          <span className="text-black text-sm">
+            {selectedAddress
+              ? `${selectedAddress.areaCity}, ${selectedAddress.pincode}`
+              : "Set Address"}
+          </span>
+        </div>
+
         <div className="md:flex hidden w-[600px] justify-center">
           <div className="flex items-center border border-green-700 bg-white w-full">
             <input
@@ -49,7 +67,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Account Icon - Navigate Based on Login */}
         <div className="flex items-center space-x-4 ml-6">
           <img
             src={Account}
@@ -58,10 +75,8 @@ const Navbar = () => {
             onClick={handleAccountClick}
           />
         </div>
-
       </div>
 
-      {/* Search Bar (Mobile) */}
       <div className="md:hidden flex-1 justify-center">
         <div className="flex items-center border border-green-700 bg-white">
           <input
@@ -73,7 +88,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
       <div
         className={`bg-gray-700 p-2 transition-all duration-300 ease-in-out ${
           menuOpen ? "block" : "hidden md:flex"
@@ -83,9 +97,9 @@ const Navbar = () => {
           {[
             "grocery",
             "misscilenaous",
-            "personalcare",
+            "Personal Care",
             "haircare",
-            "housecare"
+            "housecare",
           ].map((item) => (
             <li key={item}>
               <Link

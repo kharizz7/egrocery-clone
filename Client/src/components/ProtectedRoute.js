@@ -1,9 +1,14 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const PrivateRoute = () => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+const ProtectedRoute = ({ children }) => {
+  const token = useSelector((state) => state.user.token);
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/account" />;
+  if (!token) {
+    return <Navigate to="/account" replace />;
+  }
+
+  return children;
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;

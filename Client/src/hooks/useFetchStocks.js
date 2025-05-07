@@ -8,7 +8,7 @@ const useFetchStocks = (category) => {
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/grocery/${category}`);
+        const response = await fetch(`http://localhost:3000/api/${category}`);
         if (!response.ok) throw new Error("Failed to fetch stocks");
         const data = await response.json();
         setStocks(data);

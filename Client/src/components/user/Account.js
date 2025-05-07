@@ -18,46 +18,50 @@ const Account = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (isSignUp && password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!");
-      return;
-    }
-
+  
     const url = isSignUp
       ? "http://localhost:3000/api/register"
       : "http://localhost:3000/api/login";
-
+  
     const requestData = isSignUp
       ? { email, password, username }
       : { email, password };
-
+  
     try {
       const { data } = await axios.post(url, requestData);
-
-      setSuccessMessage(isSignUp ? "User created successfully!" : "Sign-in successful!");
-      setErrorMessage("");
-
-      // Safely get token and user info
-      const token = data.token;
-      const userInfo = {
-        username: data.username || data.user?.username,
-        email: data.email || data.user?.email,
-      };
-
-      if (token && userInfo.email) {
+      
+      // Log the full API response for debugging
+      console.log("API Response:", data);
+  
+      // Check if token and user exist
+      if (data.token && data.user) {
+        const token = data.token;
+        const userInfo = {
+          username: data.user?.username,
+          email: data.user?.email,
+        };
+  
+        // Dispatch action to store user and token in Redux
         dispatch(setUser({ user: userInfo, token }));
         console.log("✅ User stored in Redux:", userInfo, token);
       } else {
-        console.warn("⚠️ Missing token or user info in response");
+        console.warn("⚠️ Missing token or user info in response:", data);
       }
-
-      setTimeout(() => navigate("/"), 1500);
+  
+      // Reset form fields after successful submission
+      setEmail("");
+      setPassword("");
+      setUsername("");
+      setConfirmPassword("");
+  
+      setTimeout(() => navigate("/profile"), 1500);
     } catch (error) {
       console.error("Login/Register Error:", error);
       setErrorMessage(error.response?.data?.message || "An error occurred. Please try again.");
     }
   };
+  
+  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
