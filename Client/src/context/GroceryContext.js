@@ -9,7 +9,7 @@ export const GroceryProvider = ({ children }) => {
     "Hair Care": [],
     "Household": [],
     "Grocery": [],
-    "Miscellaneous": []
+    "Misscellaneous": []
   });
 
   useEffect(() => {

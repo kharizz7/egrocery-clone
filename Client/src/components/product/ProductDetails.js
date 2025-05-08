@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
-import { setSingleProduct } from '../../redux/selectedProductSlice';
+import { setSelectedProduct} from '../../redux/selectedProductSlice';
 import BuyNowModal from '../layout/Buynow';
 
 const ProductDetail = () => {
@@ -21,7 +21,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (product) {
-      dispatch(setSingleProduct(product));
+      dispatch(setSelectedProduct(product));
       setSelectedVariant(product.variants[0]); // Default variant
     }
   }, [product, dispatch]);

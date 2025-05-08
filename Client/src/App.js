@@ -21,11 +21,11 @@ import AddressForm from "./components/layout/AddressForm";
 import AddAddress from "./components/layout/AddAddress";
 import AddMobile from "./components/user/AddMobile"
 import OtpInput from "./components/user/OtpInput";
-import WishList from './components/layout/wishlist';
+import WishList from './pages/wishlist';
 import Orders from './components/layout/orders';
-import Membership from './components/layout/membership';
-import Recommendations from './components/layout/recommendation';
-import ProductCategory from './components/layout/Productcategory'
+import Membership from './pages/membership';
+import Recommendations from './pages/recommendation';
+
 
 function App() {
   return (
@@ -45,12 +45,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route path="/housecare" element={<HouseCare />} />
-          <Route path="/haircare" element={<HairCare />} />
-          <Route path="/misscilenaous" element={<Miscellaneous />} />
+          {/* category Lists */}
+          <Route path="/Household" element={<HouseCare />} />
+          <Route path="/Hair Care" element={<HairCare />} />
+          <Route path="/Miscellaneous" element={<Miscellaneous />} />
           <Route path="/Personal Care" element={<PersonalCare />} />
-          <Route path="/grocery" element={<Grocery />} />
+          <Route path="/Grocery" element={<Grocery />} />
+          {/* End */}
+
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/buynow" element={<BuyNowModal/>} />
           <Route path="/confirmorder" element={<ConfirmOrderPage />} />
@@ -59,12 +61,9 @@ function App() {
           <Route path="/addmobile" element={<AddMobile />} />
           <Route path="/otpinput" element={<OtpInput />} />
           <Route path="/orders" element={<Orders />} />
-        <Route path="/wishlist" element={<WishList />} />
-        <Route path="/:category" element={<ProductCategory />} />
-        {/* <Route path="/category/:categoryName" element={<ProductCategory />} /> */}
-        {/* <Route path="/:categoryName" element={<ProductCategory />} /> */}
-        <Route path="/membership" element={<Membership />} />
-        <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/wishlist" element={<WishList />} />
+          <Route path="/membership" element={<Membership />} />
+          <Route path="/recommendations" element={<Recommendations />} />
         
 
         </Routes>

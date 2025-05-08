@@ -72,7 +72,7 @@ const Grocery = () => {
                         />
                         <p className="text-sm text-gray-600">SKU: {variant.SKU || "N/A"}</p>
                         <p className="text-sm text-gray-600">Special Price: ₹{variant.specialPrice || "N/A"}</p>
-                        <p className="text-sm text-gray-600 line-through">MRP: ₹{variant.MRP || "N/A"}</p> {/* Strike-through applied here */}
+                        <p className="text-sm text-gray-600 line-through">MRP: ₹{variant.MRP || "N/A"}</p> 
                         <p
                           className={`text-sm font-bold mt-1 ${
                             variant.inStock ? "text-green-600" : "text-red-600"

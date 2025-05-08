@@ -1,5 +1,5 @@
 import React from "react";
-import CategoryPreview from "./categorypreview"; // Import CategoryPreview
+import CategoryPreview from "../components/product/categorypreview"; // Import CategoryPreview
 
 const Home = () => {
   return (

@@ -96,10 +96,10 @@ const Navbar = () => {
         <ul className="flex flex-col md:flex-row md:space-x-6">
           {[
             "grocery",
-            "misscilenaous",
+            "miscellaneous",
             "Personal Care",
-            "haircare",
-            "housecare",
+            "hair care",
+            "household",
           ].map((item) => (
             <li key={item}>
               <Link

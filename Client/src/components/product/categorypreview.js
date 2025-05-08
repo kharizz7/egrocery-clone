@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useFetchStocks from "../hooks/useFetchStocks";
+import useFetchStocks from "./useFetchStocks";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -64,7 +64,8 @@ const CategoryPreview = ({ categoryName }) => {
                 {variant && (
                   <div className="mt-3">
                     <p className="text-sm text-gray-600">SKU: <span className="font-medium">{variant.SKU || "N/A"}</span></p>
-                    <p className="text-sm text-gray-600">Price: <span className="font-semibold">₹{variant.specialPrice || variant.MRP || "N/A"}</span></p>
+                    <p className="text-sm text-gray-600">Special Price: <span className="font-semibold">₹{variant.specialPrice || variant.MRP || "N/A"}</span></p>
+                    <p className="text-sm text-gray-600 line-through">MRP: ₹{variant.MRP || "N/A"}</p>
                     <p className={`text-sm font-semibold mt-1 ${variant.inStock ? "text-green-600" : "text-red-600"}`}>
                       {variant.inStock ? "In Stock" : "Out of Stock"}
                     </p>

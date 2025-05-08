@@ -1,8 +1,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import stocksReducer from "./stockSlice";  
-
-import singleProductReducer from './selectedProductSlice';
+import paymentReducer from './paymentSlice';
+import selectedProductReducer from './selectedProductSlice';
 
 import {
   persistStore,
@@ -17,16 +17,18 @@ import {
 
 import storage from "redux-persist/lib/storage";
 
+// Correct the syntax here by removing the extra curly brace
 const rootReducer = combineReducers({
   user: userReducer,
   stocks: stocksReducer,
-  singleProduct: singleProductReducer,
+  selectedProduct: selectedProductReducer,
+  payment: paymentReducer
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user","stocks","selectedProduct"], 
+  whitelist: ["user", "stocks", "selectedProduct"], 
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

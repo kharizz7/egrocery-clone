@@ -4,7 +4,7 @@ import { selectAddress, logout, addAddress } from '../../redux/userSlice';
 
 const AddressList = () => {
   const addresses = useSelector((state) => state.user.addresses);
-  const selectedAddress = useSelector((state) => state.user.selectedAddress); // access the entire address
+  const selectedAddress = useSelector((state) => state.user.selectedAddress); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,21 +14,27 @@ const AddressList = () => {
 
   const handleDeleteAddress = (index) => {
     const newAddresses = [...addresses];
-    newAddresses.splice(index, 1);
-
-    // If the selected address is deleted, reset the selected address
-    const newSelectedAddress = index === selectedAddress ? null : selectedAddress;
-
-    dispatch(logout());  // Reset the state
-    newAddresses.forEach((addr) => dispatch(addAddress(addr)));
-
-    if (newSelectedAddress !== null) {
-      dispatch(selectAddress(newAddresses.indexOf(newSelectedAddress))); // Store the selected address if it's still valid
+    const addressToDelete = newAddresses[index];
+    const isDeletedAddressSelected = selectedAddress && selectedAddress.name === addressToDelete.name;
+  
+    newAddresses.splice(index, 1); // Remove the selected address
+  
+    dispatch(logout()); // Clear all addresses and selectedAddress
+    newAddresses.forEach((addr) => dispatch(addAddress(addr))); // Re-add remaining addresses
+  
+    // If the deleted address was selected, don't re-select anything
+    if (!isDeletedAddressSelected && selectedAddress) {
+      // Re-select the previous address using name match
+      const newIndex = newAddresses.findIndex(addr => addr.name === selectedAddress.name);
+      if (newIndex !== -1) {
+        dispatch(selectAddress(newAddresses[newIndex]));
+      }
     }
   };
+  
 
   const handleSelectAddress = (index) => {
-    dispatch(selectAddress(index));  // Now passing the index to store the entire address
+    dispatch(selectAddress(index));  
   };
 
   return (
