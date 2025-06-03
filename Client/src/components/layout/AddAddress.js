@@ -17,14 +17,14 @@ const AddressList = () => {
     const addressToDelete = newAddresses[index];
     const isDeletedAddressSelected = selectedAddress && selectedAddress.name === addressToDelete.name;
   
-    newAddresses.splice(index, 1); // Remove the selected address
+    newAddresses.splice(index, 1); 
   
-    dispatch(logout()); // Clear all addresses and selectedAddress
-    newAddresses.forEach((addr) => dispatch(addAddress(addr))); // Re-add remaining addresses
+    dispatch(logout()); 
+    newAddresses.forEach((addr) => dispatch(addAddress(addr))); 
   
-    // If the deleted address was selected, don't re-select anything
+    
     if (!isDeletedAddressSelected && selectedAddress) {
-      // Re-select the previous address using name match
+     
       const newIndex = newAddresses.findIndex(addr => addr.name === selectedAddress.name);
       if (newIndex !== -1) {
         dispatch(selectAddress(newAddresses[newIndex]));

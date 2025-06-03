@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setPaymentDetails } from "../../redux/paymentSlice";
+import { setFullPaymentDetails } from "../../redux/paymentSlice";
 
 const BuyNowPage = () => {
   const location = useLocation();
@@ -60,48 +60,38 @@ const BuyNowPage = () => {
     }
   };
 
-  const handleContinueToPay = () => {
-    if (paymentMethod === "UPI" && (!upiId || !upiVerified)) {
-      alert("Please verify your UPI ID before proceeding.");
+ const handleContinueToPay = () => {
+  if (paymentMethod === "UPI" && (!upiId || !upiVerified)) {
+    alert("Please verify your UPI ID before proceeding.");
+    return;
+  }
+
+  if (paymentMethod === "Net Banking" && !selectedBank) {
+    alert("Please select a bank for Net Banking.");
+    return;
+  }
+
+  if (paymentMethod === "Credit Card") {
+    const { cardNumber, expiryDate, cvv, nameOnCard } = cardDetails;
+    if (!cardNumber || !expiryDate || !cvv || !nameOnCard) {
+      alert("Please fill in all credit card details.");
       return;
     }
-  
-    if (paymentMethod === "Net Banking" && !selectedBank) {
-      alert("Please select a bank for Net Banking.");
-      return;
-    }
-  
-    if (paymentMethod === "Credit Card") {
-      const { cardNumber, expiryDate, cvv, nameOnCard } = cardDetails;
-      if (!cardNumber || !expiryDate || !cvv || !nameOnCard) {
-        alert("Please fill in all credit card details.");
-        return;
-      }
-    }
-  
-    if (paymentMethod === "Cash on Delivery") {
-      // No extra validation needed for COD
-    }
-  
-    // Store the selected method in Redux
-    dispatch(setPaymentMethod(paymentMethod));
-  
-    if (paymentMethod === "UPI") {
-      dispatch(setUpiId(upiId));
-      // dispatch(verifyUpi());
-    }
-  
-    if (paymentMethod === "Net Banking") {
-      dispatch(setSelectedBank(selectedBank));
-    }
-  
-    if (paymentMethod === "Credit Card") {
-      dispatch(setCardDetails(cardDetails));
-    }
-  
-    // Cash on Delivery requires no extra data
-    alert("Payment method saved successfully in Redux.");
-  };
+  }
+
+  // Dispatch one action to save all payment details at once
+  dispatch(setFullPaymentDetails({
+    method: paymentMethod,
+    upiId,
+    upiVerified,
+    selectedBank,
+    cardDetails,
+  }));
+
+  alert("Payment method selected sucessfully.");
+  navigate('/confirmorder'); 
+};
+
   
 
   return (
@@ -280,9 +270,14 @@ const BuyNowPage = () => {
 
       <button
   onClick={handleContinueToPay}
-  className="mt-6 flex items-center justify-center text-center w-[200px] bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
+  disabled={!paymentMethod}
+  className={`mt-6 w-[200px] text-white py-2 px-4 rounded transition ${
+    !paymentMethod ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+  }`}
+>
   Continue to Pay
 </button>
+
 
     </div>
   );

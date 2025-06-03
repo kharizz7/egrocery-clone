@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  paymentMethod: '',      // To store the selected payment method (UPI, Net Banking, etc.)
+  paymentMethod: '',
   upiId: '',
   upiVerified: false,
   selectedBank: '',
@@ -11,60 +11,42 @@ const initialState = {
     cvv: '',
     nameOnCard: '',
   },
-  cashOnDelivery: false,  // To store if Cash on Delivery is selected
+  cashOnDelivery: false,
 };
 
 const paymentSlice = createSlice({
   name: 'payment',
   initialState,
   reducers: {
-    // Set the selected payment method
     setPaymentMethod: (state, action) => {
-      const method = action.payload;
-      state.paymentMethod = method;
-
-      // Reset all payment details based on the selected method
-      if (method === 'UPI') {
-        state.upiId = '';
-        state.upiVerified = false;
-        state.selectedBank = '';
-        state.cardDetails = initialState.cardDetails;
-        state.cashOnDelivery = false;
-      } else if (method === 'Net Banking') {
-        state.selectedBank = '';
-        state.upiId = '';
-        state.upiVerified = false;
-        state.cardDetails = initialState.cardDetails;
-        state.cashOnDelivery = false;
-      } else if (method === 'Credit Card') {
-        state.cardDetails = { ...initialState.cardDetails };
-        state.upiId = '';
-        state.selectedBank = '';
-        state.upiVerified = false;
-        state.cashOnDelivery = false;
-      } else if (method === 'Cash on Delivery') {
-        state.cashOnDelivery = true;
-        state.upiId = '';
-        state.selectedBank = '';
-        state.cardDetails = initialState.cardDetails;
-        state.upiVerified = false;
-      }
+      // Keep this if you want, but prefer setFullPaymentDetails for updates
+      state.paymentMethod = action.payload;
     },
+    setFullPaymentDetails: (state, action) => {
+      const {
+        method,
+        upiId = '',
+        upiVerified = false,
+        selectedBank = '',
+        cardDetails = initialState.cardDetails,
+      } = action.payload;
 
-    // Store UPI ID and verify it
+      state.paymentMethod = method;
+      state.upiId = upiId;
+      state.upiVerified = upiVerified;
+      state.selectedBank = selectedBank;
+      state.cardDetails = cardDetails;
+      state.cashOnDelivery = method === 'Cash on Delivery';
+    },
     setUpiId: (state, action) => {
       state.upiId = action.payload;
     },
     verifyUpi: (state) => {
       state.upiVerified = true;
     },
-
-    // Store selected bank for Net Banking
     setSelectedBank: (state, action) => {
       state.selectedBank = action.payload;
     },
-
-    // Store credit card details
     setCardDetails: (state, action) => {
       state.cardDetails = { ...state.cardDetails, ...action.payload };
     },
@@ -73,6 +55,7 @@ const paymentSlice = createSlice({
 
 export const {
   setPaymentMethod,
+  setFullPaymentDetails,
   setUpiId,
   verifyUpi,
   setSelectedBank,
