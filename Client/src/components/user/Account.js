@@ -30,8 +30,8 @@ const Account = () => {
     try {
       const { data } = await axios.post(url, requestData);
       
-      // Log the full API response for debugging
-      console.log("API Response:", data);
+      // // Log the full API response for debugging
+      // console.log("API Response:", data);
   
       // Check if token and user exist
       if (data.token && data.user) {
@@ -43,7 +43,7 @@ const Account = () => {
   
         // Dispatch action to store user and token in Redux
         dispatch(setUser({ user: userInfo, token }));
-        console.log("✅ User stored in Redux:", userInfo, token);
+        // console.log("✅ User stored in Redux:", userInfo, token);
       } else {
         console.warn("⚠️ Missing token or user info in response:", data);
       }
